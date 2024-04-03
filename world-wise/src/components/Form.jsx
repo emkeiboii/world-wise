@@ -1,14 +1,14 @@
-// ""
-
 import { useEffect, useState } from "react";
+import { useUrlPosition } from "../hooks/useUrlPosition";
 import Message from "./Message";
 import Spinner from "./Spinner";
 import DatePicker from "react-datepicker";
 import styles from "./Form.module.css";
 import Button from "./Button";
-import { useNavigate } from "react-router-dom";
 import BackButton from "./BackButton";
-import { useUrlPosition } from "../hooks/useUrlPosition";
+import "react-datepicker/dist/react-datepicker.css";
+import { useCities } from "../context/CitiesContext";
+import { useNavigate } from "react-router-dom";
 
 const BASE_URL = "https://api.bigdatacloud.net/data/reverse-geocode-client";
 
@@ -21,7 +21,9 @@ export function convertToEmoji(countryCode) {
 }
 
 function Form() {
+  const { createCity, isLoading } = useCities();
   const [cityName, setCityName] = useState("");
+  const navigate = useNavigate();
   const [country, setCountry] = useState("");
   const [date, setDate] = useState(new Date());
   const [notes, setNotes] = useState("");
@@ -59,8 +61,21 @@ function Form() {
     [lat, lng]
   );
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+
+    if (!cityName && !date) return;
+
+    const newCity = {
+      cityName,
+      country,
+      emoji,
+      date,
+      notes,
+      position: { lat, lng },
+    };
+    await createCity(newCity);
+    navigate("/app");
   }
 
   if (isLoadingGeocoding) return <Spinner />;
@@ -71,7 +86,10 @@ function Form() {
   if (geocodingError) return <Message message={geocodingError} />;
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form
+      className={`${styles.form}${isLoading ? styles.loading : ""}`}
+      onSubmit={handleSubmit}
+    >
       <div className={styles.row}>
         <label htmlFor="cityName">City name</label>
         <input
@@ -84,12 +102,13 @@ function Form() {
 
       <div className={styles.row}>
         <label htmlFor="date">When did you go to {cityName}?</label>
-        {/* <input 
+
+        <DatePicker
           id="date"
-          onChange={(e) => setDate(e.target.value)}
-          value={date}
-        /> */}
-        <DatePicker />
+          onChange={(date) => setDate(date)}
+          selected={date}
+          dateFormat="dd/MM/yyyy"
+        />
       </div>
 
       <div className={styles.row}>
@@ -102,7 +121,9 @@ function Form() {
       </div>
 
       <div className={styles.buttons}>
-        <Button type={"primary"}>Add</Button>
+        <Button type={"primary"} onClick={handleSubmit}>
+          Add
+        </Button>
         <BackButton />
       </div>
     </form>
