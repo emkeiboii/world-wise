@@ -1,3 +1,40 @@
 {
-  "cities": []
+  "cities": [
+    {
+      "id": "0019",
+      "cityName": "Kirdimi",
+      "country": "Chad",
+      "emoji": "🇹🇩",
+      "date": "2024-04-05T09:14:20.477Z",
+      "notes": "",
+      "position": {
+        "lat": "17.853290114098012",
+        "lng": "17.622070312500004"
+      }
+    },
+    {
+      "id": "9c1a",
+      "cityName": "Murzuk",
+      "country": "Libya",
+      "emoji": "🇱🇾",
+      "date": "2024-04-05T09:16:59.285Z",
+      "notes": "",
+      "position": {
+        "lat": "24.04646399966658",
+        "lng": "15.512695312500002"
+      }
+    },
+    {
+      "id": "666b",
+      "cityName": "Kanturk",
+      "country": "Ireland",
+      "emoji": "🇮🇪",
+      "date": "2024-04-05T09:17:10.128Z",
+      "notes": "",
+      "position": {
+        "lat": "52.214338608258224",
+        "lng": "-8.789062500000002"
+      }
+    }
+  ]
 }
